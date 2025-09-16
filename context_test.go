@@ -102,3 +102,21 @@ func TestWithTimeOut(t *testing.T) {
 
 	fmt.Println("Running Goroutines :", runtime.NumGoroutine())
 }
+
+func TestWithDeadline(t *testing.T) { // perbedaan dengan timeout hanya di parameter waktunya saja kalo timeout dengan timer.
+	fmt.Println("Running Goroutines :", runtime.NumGoroutine())
+
+	parent := context.Background()
+	ctx, cancel := context.WithDeadline(parent, time.Now().Add(10*time.Second))
+	defer cancel()
+
+	destination := CreateCounter(ctx)
+
+	fmt.Println("Running Goroutines :", runtime.NumGoroutine())
+
+	for n := range destination {
+		fmt.Println("Counter", n)
+	}
+
+	fmt.Println("Running Goroutines :", runtime.NumGoroutine())
+}
